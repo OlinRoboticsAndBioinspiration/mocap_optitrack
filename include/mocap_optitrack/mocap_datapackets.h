@@ -86,6 +86,8 @@ class RigidBody
     int NumberOfMarkers;
     Marker *marker;
 
+    int *markerIDs;
+
     const geometry_msgs::Pose get_ros_pose();
     bool has_data();
 };

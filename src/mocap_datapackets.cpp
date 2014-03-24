@@ -7,13 +7,14 @@
 using namespace std;
 
 RigidBody::RigidBody() 
-  : NumberOfMarkers(0), marker(0)
+  : NumberOfMarkers(0), marker(0),  markerIDs(0)
 {
 }
 
 RigidBody::~RigidBody()
 {
   delete[] marker;
+  delete[] markerIDs;
 }
 
 const geometry_msgs::Pose RigidBody::get_ros_pose()
@@ -137,12 +138,13 @@ void MoCapDataFormat::parse()
     if (model.rigidBodies[m].NumberOfMarkers > 0)
     {
       model.rigidBodies[m].marker = new Marker [model.rigidBodies[m].NumberOfMarkers];
+      model.rigidBodies[m].markerIDs = new int [model.rigidBodies[m].NumberOfMarkers];
       size_t byte_count = model.rigidBodies[m].NumberOfMarkers * sizeof(Marker);
       memcpy(model.rigidBodies[m].marker, packet, byte_count);
       seek(byte_count);
 
-      // skip marker IDs
       byte_count = model.rigidBodies[m].NumberOfMarkers * sizeof(int);
+      memcpy(model.rigidBodies[m].markerIDs, packet, byte_count);
       seek(byte_count);
 
       // skip marker sizes

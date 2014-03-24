@@ -138,6 +138,7 @@ void PublishedRigidBody::publish(RigidBody &body)
       data.x = m.positionX;
       data.y = m.positionY;
       data.z = m.positionZ;
+      data.markerID = body.markerIDs[i];
       markers_vec.push_back(data);
     }
     mocap_optitrack::MarkerDataArray markers;
