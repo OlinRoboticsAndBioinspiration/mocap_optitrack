@@ -4,10 +4,7 @@
 #
 rigid_bodies:
     '1':
-        pose: Robot_1/pose
-        pose2d: Robot_1/ground_pose
-        frame_id: Robot_1/base_link
-    '2':
-        pose: Robot_2/pose
-        pose2d: Robot_2/ground_pose
-        frame_id: Robot_2/base_link
+        pose: ground_ref/pose
+        pose2d: ground_ref/ground_pose
+        markers: ground_ref/markers
+        frame_id: ground_ref/base_link

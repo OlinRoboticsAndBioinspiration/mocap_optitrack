@@ -47,9 +47,11 @@
 #include <geometry_msgs/Pose2D.h>
 #include <tf/transform_datatypes.h>
 #include "mocap_optitrack/mocap_config.h"
+#include "mocap_optitrack/MarkerDataArray.h"
 
 const std::string POSE_TOPIC_PARAM_NAME = "pose";
 const std::string POSE2D_TOPIC_PARAM_NAME = "pose2d";
+const std::string MARKER_PARAM_NAME = "markers";
 const std::string FRAME_ID_PARAM_NAME = "frame_id";
 
 PublishedRigidBody::PublishedRigidBody(XmlRpc::XmlRpcValue &config_node)
@@ -57,6 +59,7 @@ PublishedRigidBody::PublishedRigidBody(XmlRpc::XmlRpcValue &config_node)
   // load configuration for this rigid body from ROS
   publish_pose = validateParam(config_node, POSE_TOPIC_PARAM_NAME);
   publish_pose2d = validateParam(config_node, POSE2D_TOPIC_PARAM_NAME);
+  publish_markers = validateParam(config_node, MARKER_PARAM_NAME);
   // only publish tf if a frame ID is provided
   publish_tf = validateParam(config_node, FRAME_ID_PARAM_NAME);
 
@@ -70,6 +73,12 @@ PublishedRigidBody::PublishedRigidBody(XmlRpc::XmlRpcValue &config_node)
   {
     pose2d_topic = (std::string&) config_node[POSE2D_TOPIC_PARAM_NAME];
     pose2d_pub = n.advertise<geometry_msgs::Pose2D>(pose2d_topic, 1000);
+  }
+
+  if (publish_markers)
+  {
+    markers_topic = (std::string&) config_node[MARKER_PARAM_NAME];
+    markers_pub = n.advertise<mocap_optitrack::MarkerDataArray>(markers_topic, 1000);
   }
 
   if (publish_tf)
@@ -117,6 +126,23 @@ void PublishedRigidBody::publish(RigidBody &body)
     pose2d.y = pose.position.y;
     pose2d.theta = tf::getYaw(q);
     pose2d_pub.publish(pose2d);
+  }
+
+  // publish Markers
+  if (publish_markers)
+  {
+    std::vector<mocap_optitrack::MarkerData> markers_vec;
+    for(int i=0; i<body.NumberOfMarkers; ++i){
+      Marker m = body.marker[i];
+      mocap_optitrack::MarkerData data;
+      data.x = m.positionX;
+      data.y = m.positionY;
+      data.z = m.positionZ;
+      markers_vec.push_back(data);
+    }
+    mocap_optitrack::MarkerDataArray markers;
+    markers.markers = markers_vec;
+    markers_pub.publish(markers);
   }
 
   if (publish_tf)

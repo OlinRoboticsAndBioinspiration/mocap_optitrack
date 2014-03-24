@@ -3,9 +3,17 @@ project(mocap_optitrack)
 
 find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs tf roslaunch)
 
+add_message_files(
+	DIRECTORY msg
+	FILES
+	MarkerData.msg
+	MarkerDataArray.msg)
+
+generate_messages(DEPENDENCIES std_msgs)
+
 catkin_package(
   INCLUDE_DIRS include
-  CATKIN_DEPENDS roscpp
+  CATKIN_DEPENDS roscpp # message_runtime std_msgs
 )
 
 include_directories(include
