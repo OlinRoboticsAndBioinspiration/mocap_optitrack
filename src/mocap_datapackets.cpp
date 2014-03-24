@@ -81,6 +81,7 @@ void MoCapDataFormat::seek(size_t count)
 
 void MoCapDataFormat::parse()
 {
+  ros::Time timestamp(ros::Time::now());
   seek(4);
 
   // parse frame number
@@ -162,6 +163,11 @@ void MoCapDataFormat::parse()
 
   // get latency
   read_and_seek(model.latency);
+  for (int m = 0; m < model.numRigidBodies; m++)
+  {
+    model.rigidBodies[m].frameNumber = frameNumber;
+    model.rigidBodies[m].hostTimeStamp = timestamp;
+  }
 }
 
 

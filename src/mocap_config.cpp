@@ -143,6 +143,8 @@ void PublishedRigidBody::publish(RigidBody &body)
     }
     mocap_optitrack::MarkerDataArray markers;
     markers.markers = markers_vec;
+    markers.frameNumber = body.frameNumber;
+    markers.timeStamp = body.hostTimeStamp;
     markers_pub.publish(markers);
   }
 

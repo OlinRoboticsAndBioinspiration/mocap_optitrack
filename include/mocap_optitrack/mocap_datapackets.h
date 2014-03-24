@@ -88,6 +88,10 @@ class RigidBody
 
     int *markerIDs;
 
+    int frameNumber;
+
+    ros::Time hostTimeStamp;
+
     const geometry_msgs::Pose get_ros_pose();
     bool has_data();
 };
@@ -129,6 +133,7 @@ class ModelFrame
     int numOtherMarkers;
     int numRigidBodies;
 
+
     float latency;
 };
 
@@ -158,4 +163,4 @@ class MoCapDataFormat
     }
 };
 
-#endif	/*__MOCAP_DATAPACKETS_H__*/
+#endif  /*__MOCAP_DATAPACKETS_H__*/
